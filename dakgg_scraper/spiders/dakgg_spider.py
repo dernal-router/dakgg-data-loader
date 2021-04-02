@@ -1,3 +1,5 @@
+from re import search
+
 from urllib.parse import urlparse
 from w3lib.html import remove_tags
 
@@ -31,8 +33,7 @@ class DakggSpider(CrawlSpider):
     rules = [  # Get all links on start url
         Rule(
             link_extractor=LinkExtractor(
-                deny=r"\?",
-                allow=r"bser\/routes"
+                allow=r"bser\/routes\?character"
             ),
             follow=False,
             callback="parse_start_url"
@@ -40,11 +41,10 @@ class DakggSpider(CrawlSpider):
     ]
 
     def parse_start_url(self, response):
-        if response.url.endswith('bser/routes'):
-            if response.url not in self.visited_urls:
-                self.visited_urls.add(response.url)
-                print('URL IS THIS: ', response.url)
-                return self.parse_images(response)
+        if response.url not in self.visited_urls:
+            self.visited_urls.add(response.url)
+            print('URL IS THIS: ', response.url)
+            return self.parse_weapons(response)
 
     def parse_page(self, response):
         header = response.css("h1, h2").extract_first() or response.css("title").extract_first() or response.url
@@ -67,4 +67,16 @@ class DakggSpider(CrawlSpider):
                 if ('bser/images/assets/' in image.attrib['src']):
                     #print('VALUE : ', image)
                     pass
+        return items
+
+    def parse_weapons(self,response):
+        items = []
+        for route_li_entry in response.xpath("//ul[@class='route-weapon-types']/li/a"):
+            newItem = {
+                "character": response.url.split('=')[1],
+                "weapon": search('weaponType\=(.+[^\&])', route_li_entry.attrib['href']).group(1),
+                "url": route_li_entry.attrib['href'],
+            }
+            if newItem not in items:
+                items.append(newItem)
         return items
