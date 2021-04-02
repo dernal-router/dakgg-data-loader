@@ -5,6 +5,9 @@
 
 ## Once venv is installed
 > bash create_venv.sh
+
 > source enable_venv.sh
+
 > bash install_dependencies.sh
+
 > cd ..
