@@ -12,7 +12,6 @@ BOT_NAME = 'dakgg_scraper'
 SPIDER_MODULES = ['dakgg_scraper.spiders']
 NEWSPIDER_MODULE = 'dakgg_scraper.spiders'
 
-
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'dakgg_scraper'
 
@@ -87,4 +86,6 @@ HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-CLOSESPIDER_PAGECOUNT = 32
+CLOSESPIDER_PAGECOUNT = 1024
+
+DEPTH_LIMIT = 3
